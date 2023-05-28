@@ -17,7 +17,7 @@ Refer to [this tutorial](https://github.com/mwrnd/notes/tree/main/Vivado_XDMA_DD
 
 ![Block Design](img/Block_Design.png)
 
-
+LED *D18* is connected to Pin B6 of the FPGA through an inverting buffer and this design connects it to the 30th bit of a counter connected to the 250MHz XDMA AXI Clock. It should blink at `250000000/2^30 ~= 0.233Hz` which is about every 4 seconds.
 
 
 ## AXI Addresses
@@ -37,8 +37,10 @@ git clone https://github.com/mwrnd/innova2_mnv303611a_xcku15p_xdma.git
 cd innova2_mnv303611a_xcku15p_xdma
 
 sha256sum *bin
-echo f90e8cc788a0da16019b8c6533c5036732dba3c22bbd33f6a113f54963b9d154 should be the SHA256 checksum of innova2_mnv303611a_xcku15p_xdma_primary.bin
-echo 83afccf8dddbee80700a7a36e55b531483d98492d93075575ab16e3d84125782 should be the SHA256 checksum of innova2_mnv303611a_xcku15p_xdma_secondary.bin
+echo SHA256 checksum of innova2_mnv303611a_xcku15p_xdma_primary.bin:
+echo f90e8cc788a0da16019b8c6533c5036732dba3c22bbd33f6a113f54963b9d154
+echo SHA256 checksum of innova2_mnv303611a_xcku15p_xdma_secondary.bin:
+echo 83afccf8dddbee80700a7a36e55b531483d98492d93075575ab16e3d84125782
 
 cd ~
 sudo mst start
@@ -79,7 +81,7 @@ Read from `0x40000000` which is the address of the `axi_gpio_0` block. Bit0 conn
 sudo ./dma_from_device --verbose --device /dev/xdma0_c2h_0 --address 0x40000000 --size 4 --file RECV ; xxd -b RECV
 ```
 
-Write `0xff` to `0x40010000` which is the address of the `axi_gpio_1` block which has one output but, the LED.
+Write `0xff` to `0x40010000` which is the address of the `axi_gpio_1` block which has one output, the LED.
 ```
 sudo ./dma_to_device   --verbose --device /dev/xdma0_h2c_0 --address 0x40010000 --size 1  -f    ff.bin
 ```
