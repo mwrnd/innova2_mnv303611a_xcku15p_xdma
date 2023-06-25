@@ -119,6 +119,42 @@ host buffer 0x1004, 0x560a5350e000.
 
 
 
+## Communication Methods
+
+The XDMA Driver ([Xilinx's dma_ip_drivers](https://github.com/xilinx/dma_ip_drivers)) creates [read-only and write-only](https://manpages.debian.org/bookworm/manpages-dev/open.2.en.html#File_access_mode) [character device](https://en.wikipedia.org/wiki/Device_file#Character_devices) files, `/dev/xdma0_h2c_0` and `/dev/xdma0_c2h_0`, that allow direct access to the FPGA design's AXI Bus. To read from an AXI Device at address `0x40010000` you would read from address `0x40010000` of the `/dev/xdma0_c2h_0` (Card-to-Host) file. To write you would write to the appropriate address of `/dev/xdma0_h2c_0` (Host-to-Card).
+
+For example, to toggle the LED you can write to the appropriate address using [`dd`](https://manpages.debian.org/testing/coreutils/dd.1.en.html). Note `dd` requires numbers in Base-10 so you can use [`printf`](https://manpages.debian.org/testing/coreutils/printf.1.en.html) to convert from the hex address.
+```
+echo -n -e "\x00" >00.bin  ;  xxd -b 00.bin
+echo -n -e "\x01" >01.bin  ;  xxd -b 01.bin
+printf "%d\n" 0x40010000
+sudo dd if=00.bin of=/dev/xdma0_h2c_0 count=1 bs=1 seek=1073807360
+sudo dd if=01.bin of=/dev/xdma0_h2c_0 count=1 bs=1 seek=1073807360
+```
+
+![Toggle LED using dd](img/dd_LED_Toggle.png)
+
+You can also read or write to the AXI BRAM Memory.
+```
+dd if=/dev/urandom bs=1 count=8192 of=TEST
+sudo dd if=TEST of=/dev/xdma0_h2c_0 count=1 bs=8192 seek=0 oflag=seek_bytes
+sudo dd if=/dev/xdma0_c2h_0 of=RECV count=1 bs=8192 skip=0 iflag=skip_bytes
+md5sum TEST RECV
+```
+
+![Access AXI BRAM using dd](img/dd_AXI_BRAM.png)
+
+[xdma_test.c](xdma_test.c) is a simple C program that writes then reads to the given AXI Address which can be the DDR4 or BRAM and then toggles the LED.
+```
+gcc xdma_test.c -g -Wall -o xdma_test
+sudo ./xdma_test /dev/xdma0_c2h_0 /dev/xdma0_h2c_0  0x0  0x40010000
+```
+
+![xdma_test.c XDMA File Access](img/xdma_test_0x0_0x40010000.png)
+
+
+
+
 ## TODO
 
 ![dma_ip_drivers run_test](img/run_test.jpg)
