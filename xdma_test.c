@@ -73,9 +73,6 @@ int main(int argc, char **argv)
 
 	// Read in Program Arguments
 
-	// TODO - sprintf and strcpy are unsafe for use
-	// with unsanitized and/or untrusted user inputs
-
 	xdma_fd_read = 0;
 	xdma_fd_wrte = 0;
 	axi_bram_addr = (uint64_t)strtol(argv[3], NULL, 16);
@@ -84,8 +81,8 @@ int main(int argc, char **argv)
 	if (!(xdma_c2h_name)) { printf("malloc failed in main, c2h"); exit(-1); }
 	xdma_h2c_name = malloc(strlen(argv[2]));
 	if (!(xdma_h2c_name)) { printf("malloc failed in main, h2c"); exit(-1); }
-	strcpy(xdma_c2h_name, argv[1]);
-	strcpy(xdma_h2c_name, argv[2]);
+	strncpy(xdma_c2h_name, argv[1], strlen(argv[1]));
+	strncpy(xdma_h2c_name, argv[2], strlen(argv[2]));
 
 	printf("FPGA XDMA AXI BRAM and GPIO Test Program\n");
 	printf("C2H Device: %s\n", xdma_c2h_name);
