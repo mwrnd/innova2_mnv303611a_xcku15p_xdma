@@ -1,8 +1,8 @@
-**Work-In-Progress**
-
 # Innova-2 Flex Open VPI MNV303611A-EDLT Demo Project
 
 [Vivado 2022.2](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2022-2.html) XDMA PCIe to BRAM and GPIO demo for the [XCKU15P FPGA](https://www.xilinx.com/products/silicon-devices/fpga/kintex-ultrascale-plus.html) on the [Innova-2 Flex Open VPI MNV303611A-EDLT](https://www.mellanox.com/files/doc-2020/pb-innova-2-flex.pdf).
+
+**This project has been superseded by the [innova2_xdma_demo](https://github.com/mwrnd/innova2_xdma_demo) project which serves the same purpose but demonstrates more varied functionality.**
 
 I do not have a MNV303611A-EDLT I can test this project with so I tested it on a MNV303212A-ADLT. A user on the Nvidia SmartNIC Forum [successfully tested this project](https://forums.developer.nvidia.com/t/failed-to-burn-an-image-onto-innova-2-flex-fpga/254396/11).
 
